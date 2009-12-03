@@ -19,7 +19,7 @@ import c.UI.chessBoardUI;
  * Class Name - readpgn
  * Description - 
  *
- * @author suhas
+ * @author Suhas Bharadwaj
  */
 public class readpgn implements CConst
 {
