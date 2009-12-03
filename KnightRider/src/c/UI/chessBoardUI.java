@@ -48,7 +48,7 @@ import javax.swing.JToggleButton;
  * Class Name - chessBoardUI
  * Description - 
  *
- * @author suhas
+ * @author Suhas Bharadwaj
  */
 public class chessBoardUI extends JFrame implements ActionListener,ItemListener,CConst
 {
@@ -1277,7 +1277,7 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
 
         br.write("[Event \""+TITLE+"\"]\n");
         br.write("[Date \""+df.format(d)+"\"]\n");
-        br.write("[White \"Suhas\"]\n");
+        br.write("[White \"Suhas Bharadwaj\"]\n");
         br.write("[Black \"Player1\"]\n");
         br.write("[Result \"?\"]\n");
 

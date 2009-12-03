@@ -31,7 +31,7 @@ import c.UI.chessBoardUI;
  * Class Name - myJToggleButton
  * Description - 
  *
- * @author suhas
+ * @author Suhas Bharadwaj
  */
 public class myJToggleButton extends JToggleButton implements ItemListener,CConst
 {

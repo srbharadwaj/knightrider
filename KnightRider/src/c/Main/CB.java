@@ -39,7 +39,7 @@ import c.UI.chessBoardUI;
 
 /**
  *
- * @author suhas
+ * @author Suhas Bharadwaj
  */
 public class CB implements CConst
 {
@@ -225,20 +225,18 @@ public class CB implements CConst
         //is king in chk
         //removePositionsWhereKingIsAttacked(); //strightfwd
 
-        //PGN format
-//[piece_name,color,fromcol,fromrow,tocol,torow,cap(t/f),cas(kc/qc/null),pawn_promo]
-      
+        /*
+        * bacup -- b_cp = cp; b_mp = mp; mp.clear;
+        *       -- cp=b_mp[i] ; if still chk then dont add else add to mp
+        * restore -- cp = b_cp ; b_mp.clear
+        *
+        */
+  
     }
 
     public static void main(String args[])
     {
-    /*    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    }
-    catch (InstantiationException e) {}
-    catch (ClassNotFoundException e) {}
-    catch (UnsupportedLookAndFeelException e) {}
-    catch (IllegalAccessException e) {}*/
+    
 
         System.out.println("********************************");
         System.out.println("******* " + TITLE + " ******");

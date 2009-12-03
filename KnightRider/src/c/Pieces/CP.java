@@ -38,7 +38,7 @@ import java.util.Vector;
 
 /**
  *
- * @author suhas
+ * @author Suhas Bharadwaj
  */
 public class CP implements CConst
 {
@@ -56,13 +56,7 @@ public class CP implements CConst
     public Vector b_movesPossible = null;
 
 
-    /*
-     * bacup -- b_cp = cp; b_mp = mp; mp.clear;
-     *       -- cp=b_mp[i] ; if still chk then dont add else add to mp
-     * restore -- cp = b_cp ; b_mp.clear
-     *
-     */
-  
+   
     public CP(CB o,String pName,String pColor,int iniPos)
     {
         cbObj=o;
