@@ -6,8 +6,8 @@
 package c.UI;
 
 import c.Constants.CConst;
+import c.NewPkg.readpgn;
 import c.main.CB;
-import c.newpackage.readpgn;
 import c.pieces.CP;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
