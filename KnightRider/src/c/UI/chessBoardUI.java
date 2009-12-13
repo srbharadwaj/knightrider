@@ -6,10 +6,9 @@
 package c.UI;
 
 import c.Constants.CConst;
-import c.Main.CB;
-import c.NewPkg.myJToggleButton;
-import c.NewPkg.readpgn;
-import c.Pieces.CP;
+import c.main.CB;
+import c.newpackage.readpgn;
+import c.pieces.CP;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -48,7 +47,7 @@ import javax.swing.JToggleButton;
  * Class Name - chessBoardUI
  * Description - 
  *
- * @author Suhas Bharadwaj
+ * @author suhas
  */
 public class chessBoardUI extends JFrame implements ActionListener,ItemListener,CConst
 {
@@ -104,15 +103,14 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
         setContentPane(mainP);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setSize(900, 730);
+        setSize(760, 660);
         //Display the window.
         setVisible(true);
-
+        setResizable(false);
         setTitle(TITLE);
         assignCps();
 
     }
-
 
     public JPanel processCenterPanel()
     {
@@ -427,6 +425,7 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
         else if(e.getActionCommand().equals("Last"))
         {
              nextOrLastButtonIsClicked((JButton) e.getSource(),true);
+             next.setEnabled(false);
         }
         else if(e.getActionCommand().equals("Open"))
         {
@@ -516,6 +515,7 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
             if(noOfMoves == (t.allMoves.size()-1))
             {
                 j.setEnabled(false);
+                last.setEnabled(false);
                 txtAreaMoves.append((String) t.allMoves.get(t.allMoves.size()-1));
                 break;
             }
@@ -716,7 +716,7 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
     {
         if(oldCP.getPieceName().equals(PAWN))
         {
-            if( isCurPosOfSomePiece(newposition) == null)
+            if( cbo.isCurPosOfSomePiece(newposition) == null)
             {
                 int oldCPCurPos = oldCP.getCurrentPosition();
                 int i = newposition-oldCPCurPos;
@@ -898,24 +898,6 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
 
     }
 
-     //Will be called to chk if piece is captured
-    private CP isCurPosOfSomePiece(int newpos)
-    {
-        for(int i=0;i<cbo.allPieces.size();i++)
-        {
-            CP p1 = (CP) cbo.allPieces.get(i);
-            if(p1.getCurrentPosition()==newpos)
-            {
-                //yes piece is captured
-                //System.out.println("Captured at" + newpos);
-                //System.out.println("Captured at" + p1);
-                return p1;
-            }
-        }
-        //System.out.println("Captured at null");
-        return null;
-    }
-
     private void processCapturedPiece(CP p)
     {
         //yes piece is captured
@@ -991,33 +973,6 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
 
     }
 
-    private boolean isKingInCheck(String kingCol)
-    {
-        int pos=0;
-        for(int k=0;k<cbo.allPieces.size();k++)
-        {
-            CP p1 = (CP) cbo.allPieces.get(k);
-            if((p1.getPieceName().equals(KING))&& p1.getPieceColor().equals(kingCol))
-            {
-                pos = p1.getCurrentPosition();
-            }
-        }
-
-        for(int k=0;k<cbo.allPieces.size();k++)
-        {
-            CP p1 = (CP) cbo.allPieces.get(k);
-            if(!p1.getPieceColor().equals(kingCol))
-            {
-                if(p1.movesPossible.contains(pos))
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-
     public void makeMove(myJToggleButton newBut,myJToggleButton prevBut,Vector v)
     {
         /*
@@ -1073,7 +1028,7 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
                  // if pice is captured
                 //remove tht piece from 'allPieces'
                 //add tht piece to 'capturedPieces'
-                CP cpCap = isCurPosOfSomePiece(newpos);
+                CP cpCap = cbo.isCurPosOfSomePiece(newpos);
                 if(cpCap!=null)
                 {
                     cap= true;
@@ -1109,29 +1064,43 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
             }
             //move done
             //so claculate all possible moves again
-            cbo.calculateAllPossibleMoves();
-            //cbo.printAll();
+            //cbo.calculateAllPossibleMoves();
+             //castling
+            //cbo.calculateIfCastlingIsPossible();
 
             //change 'whoseturn'
             if(whoseTurn.equals(WHITE))
             {
-                if(isKingInCheck(BLACK))
-                {
-                    System.out.println("BLACK IS IN CHECK");
-                    chk=true;
-                }
                 whoseTurn = BLACK;
             }
             else
             {
-                if(isKingInCheck(WHITE))
-                {
-                    System.out.println("WHITE IS IN CHECK");
-                    chk=true;
-                }
                 whoseTurn = WHITE;
             }
 
+            //New
+            cbo.calculateMoves(whoseTurn);
+
+            if(cbo.isKingInCheck(whoseTurn))
+            {
+                if(whoseTurn.equals(WHITE))
+                {
+                    System.out.println("WHITE IS IN CHECK");
+                }
+                else
+                {
+                    System.out.println("BLACK IS IN CHECK");
+                }
+                chk=true;
+            }
+            else
+            {
+                cbo.calculateIfCastlingIsPossible();
+            }
+
+            //todo: cal chkmate and stalemate
+            cbo.printAll();
+            
             if(v==null)
             {
                 String m = calculatePGNMovesFromGUIMoves(col,name,fPos,tPos,cap,castle,chk,promo);
@@ -1149,7 +1118,6 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
             prevBut.setSelected(false);
         }
     }
-
 
     public String calculatePGNMovesFromGUIMoves(String col, String name, int fPos, int tPos, Boolean cap, String castle, Boolean chk, String promo)
     {
@@ -1182,7 +1150,7 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
             if(castle.equals("KS"))
             {
                 s=s+"O-O";
-                if(cap)
+                if(chk)
                 {
                     s=s+"+";
                 }
@@ -1190,7 +1158,7 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
             else if(castle.equals("QS"))
             {
                 s=s+"O-O-O";
-                if(cap)
+                if(chk)
                 {
                     s=s+"+";
                 }
@@ -1277,7 +1245,7 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
 
         br.write("[Event \""+TITLE+"\"]\n");
         br.write("[Date \""+df.format(d)+"\"]\n");
-        br.write("[White \"Suhas Bharadwaj\"]\n");
+        br.write("[White \"Suhas\"]\n");
         br.write("[Black \"Player1\"]\n");
         br.write("[Result \"?\"]\n");
 
@@ -1295,10 +1263,5 @@ public class chessBoardUI extends JFrame implements ActionListener,ItemListener,
         br.close();
 
     }
-
-
-
-
-
 
 }

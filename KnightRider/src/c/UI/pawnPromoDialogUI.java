@@ -24,7 +24,7 @@ import javax.swing.WindowConstants;
  * Class Name - pawnPromoDialogUI
  * Description - 
  *
- * @author Suhas Bharadwaj
+ * @author suhas
  */
 public class pawnPromoDialogUI extends JDialog implements CConst
 {

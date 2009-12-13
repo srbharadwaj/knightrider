@@ -1,11 +1,10 @@
-package c.Main;
-
+package c.main;
 
 
 import c.Constants.CConst;
-import c.Pieces.CP;
 import java.util.Vector;
 import c.UI.chessBoardUI;
+import c.pieces.CP;
 
 /*
  * To change this template, choose Tools | Templates
@@ -39,12 +38,11 @@ import c.UI.chessBoardUI;
 
 /**
  *
- * @author Suhas Bharadwaj
+ * @author suhas
  */
 public class CB implements CConst
 {
     public Vector allPieces = new Vector();
-    public Vector copy_allPieces = new Vector();
     public Vector capturedPieces = new Vector();
     public Vector allMoves = new Vector();
 
@@ -59,7 +57,6 @@ public class CB implements CConst
     public void resetCB()
     {
         allPieces.removeAllElements();
-        copy_allPieces.removeAllElements();
         capturedPieces.removeAllElements();
         allMoves.removeAllElements();
 
@@ -148,7 +145,7 @@ public class CB implements CConst
     public CB()
     {
         resetCB();
-        System.out.println("here");
+        //System.out.println("here");
         printAll();
     }
 
@@ -173,82 +170,198 @@ public class CB implements CConst
         }
     }
 
-    public void printAllPossibleMoves1()
+     //Will be called to chk if piece is captured
+    public CP isCurPosOfSomePiece(int newpos)
+    {
+        for(int i=0;i<allPieces.size();i++)
+        {
+            CP p1 = (CP) allPieces.get(i);
+            if(p1.getCurrentPosition()==newpos)
+            {
+                //yes piece is captured
+                //System.out.println("Captured at" + newpos);
+                //System.out.println("Captured at" + p1);
+                return p1;
+            }
+        }
+        //System.out.println("Captured at null");
+        return null;
+    }
+
+    public void calculateAllPossibleMoves1(String col,int newpos)
     {
         for(int i=0;i<allPieces.size();i++)
         {
             CP c = (CP) allPieces.get(i);
-            System.out.println(c.getPieceName() + " :: " + c.getPieceColor()+ " :: " + c.getCurrentPosition());
-            c.printPossibleMoves();
+            if(col.equals(c.getPieceColor()))
+            {
+                if(c.getCurrentPosition()!=newpos)
+                {
+                    String  pName = c.getPieceName();
+                    
+                    if(pName.equals(PAWN))
+                    {
+                        c.calculatePossibleMovesForPawn();
+                    }
+                    if(pName.equals(ROOK))
+                    {
+                        c.calculatePossibleMovesForRook();
+                    }
+                    if(pName.equals(KNIGHT))
+                    {
+                        c.calculatePossibleMovesForKnight();
+                    }
+                    if(pName.equals(BISHOP))
+                    {
+                        c.calculatePossibleMovesForBishop();
+                    }
+                    if(pName.equals(QUEEN))
+                    {
+                        c.calculatePossibleMovesForQueen();
+                    }
+                    if(pName.equals(KING))
+                    {
+                        c.calculatePossibleMovesForKing();
+                    }
+                }
+                else
+                {
+                    c.movesPossible.clear();
+                }
+            }
         }
     }
 
-    public void calculateAllPossibleMoves()
+
+    /*
+     * Example :
+     *
+     * turn - white
+        calpos for all white
+        bacup pomov for all white
+        clear pomov for all white
+        for each white piece
+            for each white's buposmoves
+                bacup white currpos
+                bacup black's posmov
+                set curpos as white's bacposmoves
+
+                calpos for all black
+                if white is not in chk
+                    add to white's curr pos to movposs
+
+                restore white currpos
+                restore black's posmov
+
+     *
+     *
+     */
+    public void calculateMoves(String col)
     {
-        copy_allPieces = allPieces;
+        String oppCol;
+        if(col.equals(WHITE))
+            oppCol = BLACK;
+        else
+            oppCol = WHITE;
+
+        calculateAllPossibleMoves1(oppCol,0);
+        calculateAllPossibleMoves1(col,0);
+        backupPossibleMovesForAllPieces(col);
         for(int i=0;i<allPieces.size();i++)
         {
             CP c = (CP) allPieces.get(i);
-            String  pName = c.getPieceName();
-            //System.out.println(i+pName);
-            if(pName.equals(PAWN))
+            if(col.equals(c.getPieceColor()))
             {
-                c.calculatePossibleMovesForPawn();
+                for(int j=0;j<c.b_movesPossible.size();j++)
+                {
+                    c.backupCurrentPosition();
+                    backupPossibleMovesForAllPieces(oppCol);
+                    int newCurrPos = Integer.parseInt(c.b_movesPossible.get(j).toString());
+                    c.setCurrentPosition(newCurrPos);
+                    calculateAllPossibleMoves1(oppCol,newCurrPos);
+                    if(!(isKingInCheck(col)))
+                    {
+                        c.movesPossible.add(newCurrPos);
+                    }
+                    c.restoreCurrentPosition();
+                    restorePossibleMovesForAllPieces(oppCol);
+                }
             }
-            if(pName.equals(ROOK))
+        }
+    }
+
+    public void backupPossibleMovesForAllPieces(String col)
+    {
+        for(int i=0;i<allPieces.size();i++)
+        {
+            CP c = (CP) allPieces.get(i);
+            if(col.equals(c.getPieceColor()))
             {
-                c.calculatePossibleMovesForRook();
+                c.backupPossibleMoves();
+                c.movesPossible.clear();
             }
-            if(pName.equals(KNIGHT))
+        }
+    }
+
+    public void restorePossibleMovesForAllPieces(String col)
+    {
+        for(int i=0;i<allPieces.size();i++)
+        {
+            CP c = (CP) allPieces.get(i);
+            if(col.equals(c.getPieceColor()))
             {
-                c.calculatePossibleMovesForKnight();
+                c.restorePossibleMoves();
             }
-            if(pName.equals(BISHOP))
+        }
+    }
+
+
+    public boolean isKingInCheck(String kingCol)
+    {
+        int pos=0;
+        for(int k=0;k<allPieces.size();k++)
+        {
+            CP p1 = (CP) allPieces.get(k);
+            if((p1.getPieceName().equals(KING))&& p1.getPieceColor().equals(kingCol))
             {
-                c.calculatePossibleMovesForBishop();
-            }
-            if(pName.equals(QUEEN))
-            {
-                c.calculatePossibleMovesForQueen();
-            }
-            if(pName.equals(KING))
-            {
-                c.calculatePossibleMovesForKing();
+                pos = p1.getCurrentPosition();
             }
         }
 
-        //castling
-        calculateIfCastlingIsPossible();
-
-        
-        //see if any possible move by king brings him to chk
-        //is king in chk
-        //removePositionsWhereKingIsAttacked(); //strightfwd
-
-        /*
-        * bacup -- b_cp = cp; b_mp = mp; mp.clear;
-        *       -- cp=b_mp[i] ; if still chk then dont add else add to mp
-        * restore -- cp = b_cp ; b_mp.clear
-        *
-        */
-  
+        for(int k=0;k<allPieces.size();k++)
+        {
+            CP p1 = (CP) allPieces.get(k);
+            if(!p1.getPieceColor().equals(kingCol))
+            {
+                if(p1.movesPossible.contains(pos))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
+
 
     public static void main(String args[])
     {
-    
+    /*    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    }
+    catch (InstantiationException e) {}
+    catch (ClassNotFoundException e) {}
+    catch (UnsupportedLookAndFeelException e) {}
+    catch (IllegalAccessException e) {}*/
 
         System.out.println("********************************");
         System.out.println("******* " + TITLE + " ******");
         System.out.println("********************************");
 
-        //Date d = new Date("YYYY.MM.DD");
         CB cbObj = new CB();
         new chessBoardUI(cbObj);
-       // new NewJFrame(cbObj).setVisible(true);
     }
 
-    private void calculateIfCastlingIsPossible()
+    public void calculateIfCastlingIsPossible()
     {
         CP wQR = null,wKR= null,wK = null,bQR= null,bKR= null,bK= null;
         for(int i=0;i<allPieces.size();i++)
@@ -392,64 +505,6 @@ public class CB implements CConst
 
         return false;
     }
-
-  /*  private void removePositionsWhereKingIsAttacked()
-    {
-        CP wK =null;
-        CP bK =null;
-        for(int i=0;i<allPieces.size();i++)
-        {
-            CP p = (CP) allPieces.get(i);
-            if(p.getPieceName().equals(KING))
-            {
-                if(p.getPieceColor().equals(WHITE))
-                    wK=p;
-                else
-                    bK=p;
-            }
-        }
-
-
-        Vector w_movesPossible = new Vector();
-        Vector b_movesPossible = new Vector();
-
-        for(int i=0;i<wK.movesPossible.size();i++)
-        {
-            Object o = wK.movesPossible.get(i);
-            String s = o.toString();
-            int pos = Integer.parseInt(s);
-            if(this.isKingAttackedAt(WHITE, pos))
-            {
-                w_movesPossible.add(i);
-            }
-        }
-
-        for(int i=0;i<bK.movesPossible.size();i++)
-        {
-            Object o = bK.movesPossible.get(i);
-            String s = o.toString();
-            int pos = Integer.parseInt(s);
-            if(this.isKingAttackedAt(BLACK, pos))
-            {
-                b_movesPossible.add(i);
-            }
-        }
-
-        for(int i=0;i<w_movesPossible.size();i++)
-        {
-            Object o = w_movesPossible.get(i);
-            String s = o.toString();
-            int pos = Integer.parseInt(s);
-            wK.movesPossible.remove(pos);
-        }
-        for(int i=0;i<b_movesPossible.size();i++)
-        {
-            Object o = b_movesPossible.get(i);
-            String s = o.toString();
-            int pos = Integer.parseInt(s);
-            bK.movesPossible.remove(pos);
-        }
-    }*/
 
     //First Change
     public int getLatestMove()
