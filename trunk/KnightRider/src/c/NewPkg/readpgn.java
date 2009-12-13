@@ -2,13 +2,14 @@ package c.NewPkg;
 
 
 import c.Constants.CConst;
-import c.Pieces.CP;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
 import c.UI.chessBoardUI;
+import c.UI.myJToggleButton;
+import c.pieces.CP;
 
 /*
  * To change this template, choose Tools | Templates
