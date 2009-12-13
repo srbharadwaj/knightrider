@@ -37,7 +37,7 @@ import java.io.File;
 
 /**
  *
- * @author Suhas Bharadwaj
+ * @author Suhas
  */
 public interface CConst
 {   
@@ -45,7 +45,7 @@ public interface CConst
     File FNAME=new File(FILENAME);
 
     String APP_NAME = "Chess-Game";
-    String VERSION = "v0.0.1";
+    String VERSION = "v0.0.2";
     String TITLE = APP_NAME + " " + VERSION;
     String PAWN = "Pawn";
     String ROOK = "Rook";

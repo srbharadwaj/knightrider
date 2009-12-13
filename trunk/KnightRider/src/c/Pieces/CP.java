@@ -1,8 +1,8 @@
-package c.Pieces;
+package c.pieces;
 
 
 import c.Constants.CConst;
-import c.Main.CB;
+import c.main.CB;
 import java.util.Vector;
 
 /*
@@ -38,7 +38,7 @@ import java.util.Vector;
 
 /**
  *
- * @author Suhas Bharadwaj
+ * @author suhas
  */
 public class CP implements CConst
 {
@@ -55,8 +55,6 @@ public class CP implements CConst
     public int b_currentPosition;
     public Vector b_movesPossible = null;
 
-
-   
     public CP(CB o,String pName,String pColor,int iniPos)
     {
         cbObj=o;
@@ -70,6 +68,8 @@ public class CP implements CConst
         movesDone = new Vector();
         movesPossible = new Vector();
 
+        b_movesPossible = new Vector();
+        b_currentPosition = 0;
 
         //pawn
         if(pName.equals(PAWN))
@@ -108,12 +108,12 @@ public class CP implements CConst
     {
         return this.pieceName;
     }
-   
+
     public String getPieceColor()
     {
         return this.pieceColor;
     }
-   
+
     public int getInitialPosition()
     {
         return this.initialPosition;
@@ -137,6 +137,34 @@ public class CP implements CConst
     public boolean isCaptured()
     {
         return this.captured;
+    }
+
+    public void backupCurrentPosition()
+    {
+        this.b_currentPosition = this.currentPosition;
+    }
+
+    public void restoreCurrentPosition()
+    {
+        this.currentPosition = this.b_currentPosition;
+    }
+
+    public void backupPossibleMoves()
+    {
+        this.b_movesPossible.clear();
+        for(int i=0;i<this.movesPossible.size();i++)
+        {
+            this.b_movesPossible.add(this.movesPossible.get(i));
+        }
+    }
+
+    public void restorePossibleMoves()
+    {
+        this.movesPossible.clear();
+        for(int i=0;i<this.b_movesPossible.size();i++)
+        {
+            this.movesPossible.add(this.b_movesPossible.get(i));
+        }
     }
 
     //pawn
@@ -194,7 +222,7 @@ public class CP implements CConst
              newpos = getCurrentPosition() - 9;
              chkPositionValidityAndAddThePositionForPawn(newpos,true);
          }
-         
+
 
          //enpassant
          chkPositionValidityAndAddThePositionForPawn(getEnPassentValue(),false);
@@ -396,17 +424,17 @@ public class CP implements CConst
              //System.out.println("adding"+newpos);
              if(isValidPosition(newpos))
              {
-                 if(isSameColorPiecePresent(newpos,getPieceColor()))
-                 {
-                     // dont add the position
-                     // coz same color piece is present and cant go furthur
-                     break;
-                 }
                  if(isOppositeColorPiecePresent(newpos,getPieceColor()))
                  {
                      // add the position
                      // coz different color piece is present and cant go furthur
                      movesPossible.add(newpos);
+                     break;
+                 }
+                 if(isSameColorPiecePresent(newpos,getPieceColor()))
+                 {
+                     // dont add the position
+                     // coz same color piece is present and cant go furthur
                      break;
                  }
                  else
