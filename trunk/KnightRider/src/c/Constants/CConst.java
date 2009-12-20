@@ -37,15 +37,15 @@ import java.io.File;
 
 /**
  *
- * @author Suhas
+ * @author Suhas Bharadwaj
  */
 public interface CConst
 {   
     String FILENAME = "logs.txt";
     File FNAME=new File(FILENAME);
 
-    String APP_NAME = "Chess-Game";
-    String VERSION = "v0.0.2";
+    String APP_NAME = "Knight-Rider";
+    String VERSION = "v0.0.4";
     String TITLE = APP_NAME + " " + VERSION;
     String PAWN = "Pawn";
     String ROOK = "Rook";
