@@ -3,7 +3,7 @@ package c.main;
 
 import c.Constants.CConst;
 import java.util.Vector;
-import c.UI.chessBoardUI;
+import c.UI.ChessBoardUI;
 import c.pieces.CP;
 
 /*
@@ -38,7 +38,7 @@ import c.pieces.CP;
 
 /**
  *
- * @author suhas
+ * @author Suhas Bharadwaj
  */
 public class CB implements CConst
 {
@@ -146,7 +146,7 @@ public class CB implements CConst
     {
         resetCB();
         //System.out.println("here");
-        printAll();
+        //printAll();
     }
 
     public void printAll()
@@ -358,7 +358,7 @@ public class CB implements CConst
         System.out.println("********************************");
 
         CB cbObj = new CB();
-        new chessBoardUI(cbObj);
+        new ChessBoardUI(cbObj);
     }
 
     public void calculateIfCastlingIsPossible()

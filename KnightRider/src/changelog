@@ -1,0 +1,13 @@
+v0.0.4
+-------
+1) make games panel work
+
+
+v0.0.3
+-------
+
+1) Implement checks for checkmate and stalemate
+2) implement about dialog
+3) can read multiple games from a single pgn file
+4) first and prev buttons works....whn u press prev response will be relatively slower as the no. of moves increases
+

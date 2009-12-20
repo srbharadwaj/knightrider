@@ -38,7 +38,7 @@ import java.util.Vector;
 
 /**
  *
- * @author suhas
+ * @author Suhas Bharadwaj
  */
 public class CP implements CConst
 {
