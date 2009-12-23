@@ -315,7 +315,6 @@ public class CB implements CConst
         }
     }
 
-
     public boolean isKingInCheck(String kingCol)
     {
         int pos=0;
@@ -341,7 +340,6 @@ public class CB implements CConst
         }
         return false;
     }
-
 
     public static void main(String args[])
     {
@@ -406,19 +404,15 @@ public class CB implements CConst
                 //0-0-0 possible
                 if((!wQR.isAnyPiecePresent(12)) && (!wQR.isAnyPiecePresent(13)) && (!wQR.isAnyPiecePresent(14)))
                 {
-                    if(!isKingAttackedAt(WHITE,12))
+                    if(!isKingAttackedAt(WHITE,13))
                     {
-                        if(!isKingAttackedAt(WHITE,13))
+                        if(!isKingAttackedAt(WHITE,14))
                         {
-                            if(!isKingAttackedAt(WHITE,14))
-                            {
-                                //add
-                                System.out.println("White Queen side castling possible");
-                                wK.movesPossible.add(13);
-                            }
+                            //add
+                            System.out.println("White Queen side castling possible");
+                            wK.movesPossible.add(13);
                         }
                     }
-
                 }
             }
         }
@@ -452,16 +446,13 @@ public class CB implements CConst
                 //0-0-0 possible
                 if((!bQR.isAnyPiecePresent(82)) && (!bQR.isAnyPiecePresent(83)) && (!bQR.isAnyPiecePresent(84)))
                 {
-                    if(!isKingAttackedAt(BLACK,82))
+                    if(!isKingAttackedAt(BLACK,83))
                     {
-                        if(!isKingAttackedAt(BLACK,83))
+                        if(!isKingAttackedAt(BLACK,84))
                         {
-                            if(!isKingAttackedAt(BLACK,84))
-                            {
-                                //add
-                                System.out.println("Black Queen side castling possible");
-                                bK.movesPossible.add(83);
-                            }
+                            //add
+                            System.out.println("Black Queen side castling possible");
+                            bK.movesPossible.add(83);
                         }
                     }
                 }

@@ -20,6 +20,7 @@ import java.util.Vector;
 public class EachPGNGame implements CConst
 {
     public Vector allTags = new Vector();
+    public Vector allTagDetails = new Vector();
     public Vector allBandWMoves = new Vector();
     public Vector allLines = new Vector();
 
@@ -37,8 +38,8 @@ public class EachPGNGame implements CConst
     public EachPGNGame(ChessBoardUI n,int i)
     {
         gameNo =i;
-         njf = n;
-        System.out.println(i);
+        njf = n;
+        //System.out.println(i);
     }
  
     public void setLines(Vector l)
@@ -65,13 +66,36 @@ public class EachPGNGame implements CConst
             }
             else
             {
-                allTags.add(s);
+                if(s.contains("["))
+                {
+                    allTags.add(s);
+                }
             }
         }
-
+        getTagDetails();
     }
 
-     public void getmoves(int l)
+    public void getTagDetails()
+    {
+        for(int i=0;i<allTags.size();i++)
+        {
+            String s = (String) allTags.get(i);
+            String[] stag = s.split("\"");
+            //System.out.println(stag[0]+":"+stag[1]);
+            String[] tagl = stag[0].split("\\[");
+
+            System.out.println(":"+tagl[1].trim()+":"+stag[1]+":");
+            String eachtaganddeatils = tagl[1].trim()+":"+stag[1];
+            allTagDetails.add(eachtaganddeatils);
+        }
+    }
+
+    public int getGameNumber()
+    {
+        return this.gameNo;
+    }
+
+    public void getmoves(int l)
     {
         String bORw = "w";
         for(int i=l;i<allLines.size();i++)
