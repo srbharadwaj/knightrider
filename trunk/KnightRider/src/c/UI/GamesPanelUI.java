@@ -58,12 +58,27 @@ public class GamesPanelUI extends javax.swing.JPanel {
 
         butPrevGame.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/prev.gif"))); // NOI18N
         butPrevGame.setToolTipText("Previous Game");
+        butPrevGame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butPrevGameActionPerformed(evt);
+            }
+        });
 
         butNextGame.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/next.gif"))); // NOI18N
         butNextGame.setToolTipText("Next Game");
+        butNextGame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butNextGameActionPerformed(evt);
+            }
+        });
 
         butLastGame.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/end.gif"))); // NOI18N
         butLastGame.setToolTipText("Last Game");
+        butLastGame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butLastGameActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Game No.   : ");
 
@@ -151,10 +166,78 @@ public class GamesPanelUI extends javax.swing.JPanel {
 
     private void butFirstGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butFirstGameActionPerformed
         // TODO add your handling code here:
-        njf.currentGameNo = 1;
-        njf.setEachPGNGame(njf.currentGameNo);
+        if(njf.allGames!=null)
+        {
+            njf.currentGameNo = 1;
+            updatePanelsUI();
+        }
     }//GEN-LAST:event_butFirstGameActionPerformed
 
+    private void butPrevGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butPrevGameActionPerformed
+        // TODO add your handling code here:
+        if(njf.allGames!=null)
+        {
+            njf.currentGameNo--;
+            if(njf.currentGameNo < 1)
+                njf.currentGameNo = njf.allGames.pgnGames.size();
+            updatePanelsUI();
+        }
+    }//GEN-LAST:event_butPrevGameActionPerformed
+
+    private void butNextGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butNextGameActionPerformed
+        // TODO add your handling code here:
+        if(njf.allGames!=null)
+        {
+            njf.currentGameNo++;
+            if(njf.currentGameNo > njf.allGames.pgnGames.size())
+                njf.currentGameNo = 1;
+            updatePanelsUI();
+        }
+    }//GEN-LAST:event_butNextGameActionPerformed
+
+    private void butLastGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butLastGameActionPerformed
+        // TODO add your handling code here:
+        if(njf.allGames!=null)
+        {
+            njf.currentGameNo = njf.allGames.pgnGames.size();
+            updatePanelsUI();
+        }
+    }//GEN-LAST:event_butLastGameActionPerformed
+
+    public void updatePanelsUI()
+    {
+        njf.setEachPGNGame(njf.currentGameNo);
+        labGameNo.setText(Integer.toString(njf.eachGame.getGameNumber()));
+        for(int i=0;i<njf.eachGame.allTagDetails.size();i++)
+        {
+            String s = (String) njf.eachGame.allTagDetails.get(i);
+            if(s.contains("White:"))
+            {
+                try {
+                labWhitePlayerName.setText(s.split(":")[1]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    labWhitePlayerName.setText("");
+                }
+            }
+            if(s.contains("Black:"))
+            {
+                try {
+                labBlackPlayerName.setText(s.split(":")[1]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    labBlackPlayerName.setText("");
+                }
+            }
+            if(s.contains("Result:"))
+            {
+                try {
+                labGameResult.setText(s.split(":")[1]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    labGameResult.setText("*");
+                }
+
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton butBrowseGames;

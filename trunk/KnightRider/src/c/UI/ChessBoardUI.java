@@ -83,8 +83,8 @@ public class ChessBoardUI extends JFrame implements ActionListener,ItemListener,
     public int noOfButSelected=0;
     public String whoseTurn = WHITE;
     private boolean highlight = true;
-    private EachPGNGame eachGame = null;
-    private AllPGNGames allGames = null;
+    public EachPGNGame eachGame = null;
+    public AllPGNGames allGames = null;
     //private String turn = null;
     public int noOfMoves = 0;
     public int currentGameNo = 1;
