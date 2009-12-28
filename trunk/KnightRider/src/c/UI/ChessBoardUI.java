@@ -406,6 +406,7 @@ public class ChessBoardUI extends JFrame implements ActionListener,ItemListener,
         next.setEnabled(true);
         last.setEnabled(true);
     }
+
     public void actionPerformed(ActionEvent e)
     {
         if(e.getActionCommand().equals("Exit"))
